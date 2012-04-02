@@ -45,74 +45,40 @@
               <li class="active"><a href="about.php">About</a></li>
               <li class="active"><a href="contact.php">Contact</a></li>
 	          <li class="active"><a href="list.php">List</a></li>
-	          <?php
-	          session_start();
-	          if ($_SESSION['username'])
-	          {
-	          	echo "<li class=\"active\"><a href=\"logout.php\">Sign Out</a></li>";
-	          }
-	          else 
-	          {
-	          	echo "<li class=\"active\"><a href=\"sign_in.php\">Sign In</a></li>";
-	          }
-	          ?>
+	          <li class="active"><a href="sign_in.php">Sign In</a></li>
             </ul>
-            <p class="navbar-text pull-right">
-		    <?php     
-		    session_start();       
-            if ($_SESSION["username"])
-            {
-            	echo "Login As <a href=\"member.php\">".$_SESSION['username']."</a>";
-            }
-            ?>
-            </p>
+            <p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
+
+    <div class="container">
+      <div class="content">
+	<div class="row">
+	  <div class="login-form">
+	     <h2>Login</h2>
+	     <form action="login.php" method="POST">
+		<fieldset>
+		   <div class="clearfix">
+		       <input type="text" placeholder="Username" name="username">
+		   </div>
+		   <div class="clearfix">
+ 		       <input type="password" placeholder="Password" name="password">
+		   </div>	   
+		</fieldset>
+		<td>
+		  <button class="btn" type="submit">Sign in</button>
+		</td>
+		<td>
+		  <a class="btn" href="register.php">Register</a>
+		</td>
+	     </form>
+	  </div>
+	</div>
+      </div>
+    </div> <!-- /container -->
     
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
-              <li class="active"><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-        
-        <div class="span9">
-          <div class="row-fluid">
-           <form class="form-search">
-           	<input type="text" class="input-medium search-query">
-			<button type="submit" class="btn">Search</button>
-           </form>
-          </div>
-          <div class="row-fluid">
-            <div class="span9">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
-            </div><!--/span-->
-          </div><!--/row-->
-        </div><!--/span-->
-      </div><!--/row-->
-    </div><!--/.fluid-container-->
 
     <!-- Le javascript
     ================================================== -->
@@ -133,3 +99,7 @@
 
   </body>
 </html>
+
+
+<?php
+?>

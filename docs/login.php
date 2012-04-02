@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 require "connect.php";
 
 $username = $_POST["username"];
@@ -12,9 +14,15 @@ if ($username&&$password)
     oci_fetch_all($s, $res);
 
     if ($res)
-       echo "Hello, $username";
+    {
+       $_SESSION["username"]=$_POST["username"];
+       header("Location: member.php");
+    }
     else
+    {
        echo "Invaild username/password."; 
+       header("Location: index.php");
+    }
 }
 else
    echo "invaild username or password";

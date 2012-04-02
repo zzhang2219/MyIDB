@@ -1,5 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php 
+
+require 'connect.php';
+
+//$submit = $_POST['submit'];
+
+//form value
+$username = $_POST['username'];
+$email = $_POST['email'];
+$firstname = $_POST['firstname'];
+$lastname = $_POST['lastname'];
+$phone = $_POST['phone'];
+$password = $_POST['password'];
+$confirmpw = $_POST['confirmpw'];
+$gender = $_POST['gender'];
+
+//echo $username;
+if ($_POST['submit'])
+{
+	if ($username)
+	{
+		if ($email)
+		{
+			if ($firstname)
+			{
+				if ($lastname)
+				{
+					if ($gender)
+					{
+						if ($password && $confirmpw)
+						{
+							if($password == $confirmpw)
+							{
+								$stat = "INSERT INTO USERS(USERNAME, FIRSTNAME, LASTNAME, EMAIL, PASSWORD, GENDER, PHONE) 
+								VALUES('$username', '$firstname', '$lastname', '$email', '$password', '$gender', '$phone')";
+								
+								$result = oci_parse($conn, $stat);
+								
+								//echo $stat;
+								oci_execute($result);
+								
+								oci_close($conn);
+								Header("Location: index.php");
+							}
+							else 
+							{
+								echo "The confirm password is not equal to password!";
+							}
+						}
+						else{
+							echo "Please enter your password.";
+						}
+					}
+					else 
+					{
+						echo "Please select your gender.";
+					}
+				}
+				else 
+				{
+					echo "please input your lastname.";
+				}
+			}	
+			else 
+			{
+				echo "Please input your firstname.";
+			}
+		}
+		else
+		{
+			echo "Please input email!";
+		}
+	}	
+	else 
+	{
+		echo "Please input the username!";
+	}
+}
+?>
   <head>
     <meta charset="utf-8">
     <title>MyTutor</title>
@@ -44,7 +123,7 @@
               <li class="active"><a href="index.php">Home</a></li>
               <li><a href="about.php">About</a></li>
               <li><a href="contact.php">Contact</a></li>
-	      <li><a href="list.php">List</a></li>
+	      	  <li><a href="list.php">List</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -53,56 +132,51 @@
 
     <div class="container">
       <div class="content">
-	<div class="row">
-	  <div class="login-form">
-	     <h2>New Registation</h2>
-	     <form class="well">
-		<fieldset>
-		   <div class="clearfix">
-		      <label><b>Username<b></label><input type="text" name="username">
-		   </div>
-		   <div class="clearfix">
-		       <label><b>Email<b></label><input type="text" name="email">
-		   </div>
-		   <div>
-		       <label><b>Firstname<b></label><input type="text" name="firstname">
-		   </div>
-		   <div class="clearfix">
-		       <label><b>Lastname<b></label><input type="text" name="lastname">
-    		   </div>
-		   <div class="clearfix">
- 		      <label><b>Password<b></label><input type="password" name="password">
-		   </div>
-		   <div class="clearfix">
-                      <label><b>Password Confirmation<b></label><input type="password" name="confirmpw">
+		<div class="row">
+	  	   <div class="login-form">
+	     	  <h2>New Registation</h2>
+	     	  <form class="well" action="register.php" method="POST">
+				<fieldset>
+		   		<div class="clearfix">
+		      	  <label><b>Username</b></label><input type="text" name="username">
+		   		</div>
+		   		<div class="clearfix">
+		       	  <label><b>Email</b></label><input type="text" name="email">
+		   		</div>
+		   		<div class="clearfix">
+		       	  <label><b>Firstname</b></label><input type="text" name="firstname">
+		   		</div>
+		   		<div class="clearfix">
+		       	  <label><b>Lastname</b></label><input type="text" name="lastname">
+    		    </div>
+		   		<div class="clearfix">
+ 		      	  <label><b>Password</b></label><input type="password" name="password">
+		   		</div>
+		   		<div class="clearfix">
+                  <label><b>Password Confirmation</b></label><input type="password" name="confirmpw">
 	           </div>
-		   <div class="clearfix">
-		      <label><b>Phone<b></label><input type="text" name="phone">
-                   </div>
-		   <div class="clearfix">
-		      <label><b>Gender<b></label>
-		      <table>
-		      <tr>
-		        <th><input type="radio" value="M" name="gender"></th><th><label>Male</label></th>
-		      </tr>
-		      <tr>
-		        <th><input type="radio" value="F" name="gender"></th><th><label>Female</label></th>
-		      </tr>
-		      </table>
-		   </div>
-	           <div class="clearfix">
-		      <label><b>Profile Picture<b></label>
-		      <div class="controls">
-		        <input class="input-file" id="fileinput" type="file">
-		      </div>
-		   </div>	   
-		</fieldset>
-		<tr>
-		  <button class="btn" type="submit">Submit</button>
-		</tr>
-	     </form>
-	  </div>
-	</div>
+		   	   <div class="clearfix">
+		      	  <label><b>Phone</b></label><input type="text" name="phone">
+               </div>
+		   	   <div class="clearfix">
+		      	  <label><b>Gender</b></label>
+		      	  <table>
+		      		<tr>
+		        	  <th><input type="radio" value="M" name="gender"></th><th><label>Male</label></th>
+		      	    </tr>
+		      		<tr>
+		        	  <th><input type="radio" value="F" name="gender"></th><th><label>Female</label></th>
+		      		</tr>
+		      	  </table>
+		   	  </div>
+	       	  <div class="clearfix">
+		      	 <label><b>Profile Picture</b></label><input type="text" name="picture">
+		   	  </div>  
+			  </fieldset>
+			  <input class="btn" type="submit" name=submit value="Submit">
+	  		</form>
+	  	  </div>
+		</div>
       </div>
     </div> <!-- /container -->
 
@@ -125,3 +199,4 @@
 
   </body>
 </html>
+

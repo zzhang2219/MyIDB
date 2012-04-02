@@ -32,7 +32,7 @@
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container">
+        <div class="container-fluid">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -46,6 +46,7 @@
               <li class="active"><a href="contact.php">Contact</a></li>
 	      <li class="active"><a href="list.php">List</a></li>
             </ul>
+              <p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -60,11 +61,26 @@
 
 	    $s = oci_parse($conn, 'select * from users');
 	    oci_execute($s);
-	    oci_fetch_all($s, $res);
-	    echo "<pre>\n";
-  	    var_dump($res);
-	    echo "</pre>\n";
-?> 
+	    //Define table layout
+	    echo "<table class=\"table table-striped\"><thead><tr><th>Username</th><th>First Name</th><th>Last Name</th><th>Gender</th><th>Email</th><th>Phone</th></tr></thead>";
+	    echo "<tbody>";
+	    while (($row = oci_fetch_array($s, OCI_ASSOC)))
+	    {
+	    	echo "<tr>";
+	    	echo "<td>".$row['USERNAME']."</td>";
+	    	echo "<td>".$row['FIRSTNAME']."</td>";
+	    	echo "<td>".$row['LASTNAME']."</td>";
+	    	echo "<td>".$row['GENDER']."</td>";
+	    	echo "<td>".$row['EMAIL']."</td>";
+	    	echo "<td>".$row['PHONE']."</td>";
+	    	echo "</tr>";
+	
+	    }
+	    echo "</tbody></table>";
+	    
+	    oci_free_statement($s);
+	    oci_close($conn);
+	?> 
 	</div>
       </div>
     </div> <!-- /container -->
