@@ -24,12 +24,12 @@ if ($res)
 	$result = oci_parse($conn, $msg_query);
 	oci_execute($result);
 	oci_close($conn);
-	//Header("Location: member.php");
+	Header("Location: member.php");
 }
 else 
 {
 	oci_close($conn);
-	//Header("Location: index.php");
+	Header("Location: index.php");
 }
 
 ?>

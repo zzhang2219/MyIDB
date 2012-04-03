@@ -54,7 +54,8 @@
             if ($_SESSION["username"])
             {
             	echo "Login As <a href=\"member.php\">".$_SESSION['username']."</a>";
-            }
+            	$username = $_SESSION["username"];
+             }
             ?>
             </p>
           </div><!--/.nav-collapse -->
@@ -69,6 +70,23 @@
     		<li><a href="#profile" data-toggle="tab">Profile</a></li>
     		<li><a href="#messages" data-toggle="tab">Messages</a></li>
     		<li><a href="#setting" data-toggle="tab">Setting</a></li>
+    		<?php
+    			session_start();
+    			require 'connect.php';
+    			$q = "select * from users U where U.username='$username'";
+    			$res = oci_parse($conn, $q);
+    			oci_execute($res);
+    			while(($row = oci_fetch_array($res, OCI_ASSOC)))
+    			{
+    				if ($row["ISTUTOR"]==1)
+    				{
+    					echo "<li><a href=\"#schedule\" data-toggle=\"tab\">Schedule</a></li>";
+    					$istutor = 1;
+    				}
+    				else 
+    					$istutor = 0;
+    			} 
+    		?>
     	  </ul>
     	  <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="profile">
@@ -107,6 +125,64 @@
               		?>
               	      </fieldset>
               	    </form>
+              	    <div id="tutorModal" class="modal hide fade">
+            	<div class="modal-header">
+              		<a class="close" data-dismiss="modal" >&times;</a>
+              		<h3>Become a Tutor</h3>
+            	</div>
+              	<div class="modal-body">
+              		<form action="regtutor.php" method="POST">
+						<fieldset>
+		   				<div class="clearfix">
+		      	  			<label><b>Address</b></label><input type="text" name="address">
+		   				</div>
+		   				<div class="clearfix">
+		       	  			<label><b>Zip Code</b></label><input type="text" name="zip">
+		   				</div>
+		   				<div class="clearfix">
+		   					<div>
+		       	  				<label><b>Description</b></label>
+		       	  			</div>
+		       	  			<div class="controls">
+              					<textarea class="input-xlarge" id="textarea" rows="3" name="description"></textarea>
+            				</div>
+		   				</div>
+		   				<div class="clearfix">
+		       	  			<label><b>Price</b></label><input type="text" name="price">
+		   				</div>
+		   				<div class="control-group">
+            				<label class="control-label" for="optionsCheckboxList"><b>Checkboxes</b></label>
+            				<div class="controls">
+            					<?php 
+            					require 'connect.php';
+            					$query = "select distinct sname from speciality";     
+                				$s = oci_parse($conn, $query);
+	    						oci_execute($s); 
+	    						while (($row = oci_fetch_array($s, OCI_ASSOC)))
+	    						{
+             						echo "<label class=\"checkbox\">";
+                					echo "<input type=\"checkbox\" name=\"options[]\" value=\"" .$row["SNAME"]."\">";
+                				    echo $row["SNAME"];
+ 									echo "</label>";
+	    						}
+              					?>
+              					<p class="help-block"><strong>Note:</strong> At least one specialty has been selected</p>
+            				</div>
+          				</div>
+		   				</fieldset>
+		   					<div class="modal-footer">
+              					<a href="#" class="btn" data-dismiss="modal" >Close</a>
+              					<input class="btn btn-primary" type="submit" name=submit value="Submit">
+            				</div>
+		   			</form>
+            	</div>
+          		</div>
+          		<?php  
+          			if ($istutor==0)
+          			{
+          				echo "<a data-toggle=\"modal\" href=\"#tutorModal\" class=\"btn btn-primary btn-large\">Become a Tutor!</a>"; 
+          			}
+          		?>
               	  </div>
               	</div>
             </div>
@@ -198,6 +274,17 @@
     </div> <!-- /container -->
               </p>
             </div>
+            <?php
+            if ($istutor==1)
+            {
+            	echo "<div class=\"tab-pane fade in active\" id=\"schedule\">";
+            	echo 	"<div class=\"row\">";
+            	echo   	  "<div class=\"span8\">";
+            	echo  	  "</div>";
+            	echo  	"</div>";
+            	echo "</div>";
+            }
+            ?>
           </div>  
 		</div>
       </div>
