@@ -10,13 +10,13 @@ $phone = $_POST["phone"];
 $update_query = "UPDATE USERS 
 		SET FIRSTNAME='$firstname', LASTNAME='$lastname', PASSWORD='$password', PHONE='$phone'
 		WHERE USERNAME='$username'";
-echo $update_query;
+//echo $update_query;
 
 $result = oci_parse($conn, $update_query);
 
 oci_execute($result);
 								
 oci_close($conn);
-//Header("Location: member.php");
+Header("Location: member.php");
 
 ?>

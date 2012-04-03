@@ -130,9 +130,40 @@
 	    			echo "</tr>";
 	    		}
 	    		echo "</tbody></table>";
-	    		//oci_free_statement($result);
+	    		oci_free_statement($result);
               ?>
-              </p>
+              <div id="myModal" class="modal hide fade">
+            	<div class="modal-header">
+              		<a class="close" data-dismiss="modal" >&times;</a>
+              		<h3>Message</h3>
+            	</div>
+              	<div class="modal-body">
+              		<form action="msg.php" method="POST">
+						<fieldset>
+		   				<div class="clearfix">
+		      	  			<label><b>Receiver</b></label><input type="text" name="receiver">
+		   				</div>
+		   				<div class="clearfix">
+		       	  			<label><b>Topic</b></label><input type="text" name="topic">
+		   				</div>
+		   				<div class="clearfix">
+		   					<div>
+		       	  				<label><b>Content</b></label>
+		       	  			</div>
+		       	  			<div class="controls">
+              					<textarea class="input-xlarge" id="textarea" rows="3" name="content"></textarea>
+            				</div>
+		   				</div>
+		   				</fieldset>
+		   					<div class="modal-footer">
+              					<a href="#" class="btn" data-dismiss="modal" >Close</a>
+              					<input class="btn btn-primary" type="submit" name=send value="Send">
+            				</div>
+		   			</form>
+            	</div>
+          		</div>
+          		<a data-toggle="modal" href="#myModal" class="btn btn-primary btn-large">Send Message</a>
+              	</p>
             </div>  
             <div class="tab-pane fade" id="setting">
               <p>
