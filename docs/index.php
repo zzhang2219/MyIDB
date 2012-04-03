@@ -46,6 +46,7 @@
               <li class="active"><a href="contact.php">Contact</a></li>
 	          <li class="active"><a href="list.php">List</a></li>
 	          <?php
+	          require "connect.php";
 	          session_start();
 	          if ($_SESSION['username'])
 	          {
@@ -72,42 +73,100 @@
     </div>
     
     <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
-              <li class="active"><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-        
-        <div class="span9">
-          <div class="row-fluid">
+         <div class="row-fluid">
            <form class="form-search">
            	<input type="text" class="input-medium search-query">
 			<button type="submit" class="btn">Search</button>
            </form>
           </div>
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Choose a subject</li>
+             
+            <?php     
+		    $s = oci_parse($conn, 'select * from Speciality');
+		    oci_execute($s);
+		    
+		    while (($row = oci_fetch_array($s, OCI_ASSOC)))
+            {
+            	echo "<li><a href=\"#\">".$row['SNAME']."</a></li>";
+            	
+            }
+            ?>
+          </ul>
+          <br/> <br/>
+            <ul class="nav nav-list">
+              <li class="nav-header">Most Popular Topics</li>
+            <?php     
+		    session_start();
+		    $s = oci_parse($conn, 'select * from tag order by count');
+		    oci_execute($s);
+			   
+            while (($row = oci_fetch_array($s, OCI_ASSOC)))
+            {
+            	if($row['SNAME']=='COMPUTER PROGRAMMING')
+            	echo "<button class=\"btn btn-success\" href=\"#\">".$row['TAGNAME']."</button> ";
+            	else if($row['SNAME']=='MATH')
+            	echo "<button class=\"btn btn-info\" href=\"#\">".$row['TAGNAME']."</button> ";
+            	else 
+            	echo "<button class=\"btn btn-inverse\" href=\"#\">".$row['TAGNAME']."</button> ";
+            }
+            ?>
+                      
+            </ul>
+            <br/><br/>  
+            <?php  if ($_SESSION["username"]) {
+            echo "<ul class=\"nav nav-list\"> <li class=\"nav-header\">You may interested in:</li>";
+                   
+            	$username=$_SESSION["username"];
+            	$query = "select * from preference p where p.username = '$username'";
+            	$s = oci_parse($conn, $query);
+            	oci_execute($s);
+            	while (($row = oci_fetch_array($s, OCI_ASSOC)))
+            	{
+            		echo "<li><a href=\"#\">".$row['SNAME']."</a></li>";
+            	}
+            }
+            echo "</ul>";
+            ?>
+           
+          </div><!--/.well -->
+        </div><!--/span-->
+        
+        <div class="span9">
+
           <div class="row-fluid">
             <div class="span9">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
+              <h2>Top Tutors in New York</h2>
+						<?php
+						$s = oci_parse($conn, 'select * from users u, tutor t, tutor_spec ts where u.istutor=1 and u.username=t.tutorname and ts.tutorname=t.tutorname order by t.rate');
+						oci_execute($s);
+						//Define table layout
+						echo "<table class=\"table table-striped\">";
+						echo "<tbody>";
+						while (($row = oci_fetch_array($s, OCI_ASSOC)))
+						{
+							echo "<tr>";
+							echo "<td width=160px><img style=\"height:200px;width:140px\" src =".$row['PHOTO']."/></td>";
+							echo "<td> <table><tr>";
+							echo "<td width=300px><a href=\"tutor.php?name=".$row['USERNAME']."\"><h2>".$row['FIRSTNAME']." ".$row['LASTNAME']."</h2></a>Rating: ".$row['RATE']."</td></tr>";
+							echo "<tr><td>".$row['REGION']." ".$row['ZIP']."</td></tr>";
+							echo "<tr><td>".$row['EMAIL']." ".$row['PHONE']."</td></tr>";
+							echo "<tr><td colspan=2 style=\"width:150px;\">".$row['DESCRIPTION']."</td></tr>"; 
+							echo "</table></td>";
+							echo "<td>".$row['SNAME']."</td></tr>";
+						}
+						echo "</tbody></table>";
+						 
+						oci_free_statement($s);
+						oci_close($conn);
+						?>
+						
+						
+						
+					
             </div><!--/span-->
           </div><!--/row-->
         </div><!--/span-->
