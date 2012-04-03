@@ -70,6 +70,7 @@
     		<li><a href="#profile" data-toggle="tab">Profile</a></li>
     		<li><a href="#messages" data-toggle="tab">Messages</a></li>
     		<li><a href="#setting" data-toggle="tab">Setting</a></li>
+    		<li><a href="#myschedule" data-toggle="tab">MySchedule</a></li>
     		<?php
     			session_start();
     			require 'connect.php';
@@ -80,7 +81,6 @@
     			{
     				if ($row["ISTUTOR"]==1)
     				{
-    					echo "<li><a href=\"#schedule\" data-toggle=\"tab\">Schedule</a></li>";
     					$istutor = 1;
     				}
     				else 
@@ -102,16 +102,17 @@
                 	//echo $query;
                 	$s = oci_parse($conn, $query);
 	    			oci_execute($s); 
-
+	    			
 	    			while(($row = oci_fetch_array($s, OCI_ASSOC)))
 	    			{
-              			echo "<div><td>Username:</td><td> </td><td>".$row['USERNAME']."</td></div>";
-              			echo "<div><td>Firstname:</td><td> </td><td>".$row['FIRSTNAME']."</td></div>";
-              			echo "<div><td>Lastname:</td><td> </td><td>".$row['LASTNAME']."</td></div>";
-              			echo "<div><td>Gender:</td><td> </td><td>".$row['GENDER']."</td></div>";
-              			echo "<div><td>Email:</td><td> </td><td>".$row['EMAIL']."</td></div>";
-              			echo "<div><td>Phone:</td><td> </td><td>".$row['PHONE']."</td></div>";
-              			
+	    				echo "<div class=\"span6\">";
+              			echo "<table class=\"table\"\"><div><tr><td><strong>Username</strong></td><td>".$row['USERNAME']."</td></tr></div>";
+              			echo "<div><tr><td><strong>Firstname</strong></td><td>".$row['FIRSTNAME']."</td></tr></div>";
+              			echo "<div><tr><td><strong>Lastname</strong></td><td>".$row['LASTNAME']."</td></tr></div>";
+              			echo "<div><tr><td><strong>Gender</strong></td><td>".$row['GENDER']."</td></tr></div>";
+              			echo "<div><tr><td><strong>Email</strong></td><td>".$row['EMAIL']."</td></tr></div>";
+              			echo "<div><tr><td><strong>Phone<strong></td><td>".$row['PHONE']."</td></tr></div></table>";
+              			echo "</div>";
               			$username = $row['USERNAME'];
               			$password = $row['PASSWORD'];
               			$firstname = $row['FIRSTNAME'];
@@ -248,7 +249,16 @@
 		<div class="row">
 	  	   <div class="login-form">
 	     	  <h2>Update Information</h2>
-	     	  <form class="well" action="update.php" method="POST">
+	     	  <form class="well" action=<?php
+	     	  	 if ($istutor==0)
+	     	  	 {
+	     	  	 	echo "\"update.php\"";
+	     	  	 } 
+	     	  	 else
+	     	  	 {
+	     	  	 	echo "\"tutorupdate.php\"";
+	     	  	 } 
+	     	  	 	?> method="POST">
 				<fieldset>
 		   		<div class="clearfix">
 		       	  <label><b>Firstname</b></label><input type="text" name="firstname" value=<?php echo $firstname ?>>
@@ -262,6 +272,26 @@
 		   	    <div class="clearfix">
 		      	  <label><b>Phone</b></label><input type="text" name="phone" value=<?php echo $phone ?>>
                 </div>
+                <?php
+                	if ($istutor==1)
+                	{
+                		require 'connect.php';
+                		$tutorname = $username;
+                		$query = "select * from tutor where tutorname = '$tutorname'";
+                		$res = oci_parse($conn, $query);
+                		oci_execute($res);
+                		$row = oci_fetch_array($res, OCI_ASSOC);
+                		echo "<div class=\"clearfix\">";
+                		echo "<label><b>Address</b></label><input type=\"text\" name=\"address\" value=\"".$row['ADDRESS']."\">";
+                		echo "</div>";
+                		echo "<div class=\"clearfix\">";
+                		echo "<label><b>Zip Code</b></label><input type=\"text\" name=\"zip\" value=\"".$row['ZIP']."\">";
+                		echo "</div>";
+                		echo "<div class=\"clearfix\">";
+                		echo "<label><b>Price</b></label><input type=\"text\" name=\"price\" value=\"".$row['PRICE']."\">";
+                		echo "</div>";
+                	} 
+                ?>
 	       	    <div class="clearfix">
 		      	  <label><b>Profile Picture</b></label><input type="text" name="picture">
 		   	    </div>  
@@ -274,17 +304,35 @@
     </div> <!-- /container -->
               </p>
             </div>
-            <?php
-            if ($istutor==1)
-            {
-            	echo "<div class=\"tab-pane fade in active\" id=\"schedule\">";
-            	echo 	"<div class=\"row\">";
-            	echo   	  "<div class=\"span8\">";
-            	echo  	  "</div>";
-            	echo  	"</div>";
-            	echo "</div>";
-            }
-            ?>
+
+	<div class="tab-pane fade" id="myschedule">
+	  <div class="row">
+		<div class="span8">
+		<?php 
+            require 'connect.php';
+            $stat = "select * from schedule S where S.tutorname='$username' or S.username='$username'";
+            $result = oci_parse($conn, $stat);
+            oci_execute($result);
+            echo "<table class=\"table table-striped\"><thead><tr><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th></tr></thead>";
+	    	echo "<tbody>";
+	    	while (($mrow = oci_fetch_array($result, OCI_ASSOC)))
+	    	{
+	    		echo "<tr>";
+	    		echo "<td>".$mrow['TUTORNAME']."</td>";
+	    		echo "<td>".$mrow['USERNAME']."</td>";
+	    		echo "<td>".$mrow['SNAME']."</td>";
+	    		echo "<td>$".$mrow['PRICE']."</td>";
+	    		echo "<td>".$mrow['SDATE']."</td>";
+	    		echo "<td>".$mrow['TIMEPERIOD']."min</td>";
+	    		echo "</tr>";
+	    	}
+	    	echo "</tbody></table>";
+	    	oci_free_statement($result);
+        ?>
+		</div>
+	  </div>
+	</div>
+
           </div>  
 		</div>
       </div>
