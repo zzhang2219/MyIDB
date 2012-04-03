@@ -86,6 +86,13 @@
     				else 
     					$istutor = 0;
     			} 
+    			
+    			if($istutor==1)
+    			{
+    				echo "<li><a href=\"#myedu\" data-toggle=\"tab\">MyEducation</a></li>";
+    				echo "<li><a href=\"#myexp\" data-toggle=\"tab\">MyExperience</a></li>";
+    			}
+    			
     		?>
     	  </ul>
     	  <div id="myTabContent" class="tab-content">
@@ -310,27 +317,195 @@
 		<div class="span8">
 		<?php 
             require 'connect.php';
-            $stat = "select * from schedule S where S.tutorname='$username' or S.username='$username'";
-            $result = oci_parse($conn, $stat);
+            $stat1 = "select * from schedule S where S.username='$username'";
+            $stat2 = "select * from schedule S where S.tutorname='$username'";
+            $result = oci_parse($conn, $stat1);
             oci_execute($result);
-            echo "<table class=\"table table-striped\"><thead><tr><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th></tr></thead>";
+            echo "<div class=\"row\">";
+            echo "<div class=\"span6\">";
+            echo "<table class=\"table table-striped\"><thead><tr><th>Sid</th><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th><th></th></tr></thead>";
 	    	echo "<tbody>";
 	    	while (($mrow = oci_fetch_array($result, OCI_ASSOC)))
 	    	{
 	    		echo "<tr>";
+	    		echo "<td>".$mrow['SID']."</td>";
 	    		echo "<td>".$mrow['TUTORNAME']."</td>";
 	    		echo "<td>".$mrow['USERNAME']."</td>";
 	    		echo "<td>".$mrow['SNAME']."</td>";
 	    		echo "<td>$".$mrow['PRICE']."</td>";
 	    		echo "<td>".$mrow['SDATE']."</td>";
 	    		echo "<td>".$mrow['TIMEPERIOD']."min</td>";
+	    		if ($mrow['STATE']==1)
+	    		{
+	    			echo "<td><button class=\"bnt\" type=\"submit\">Review</button></td>";
+	    		}
 	    		echo "</tr>";
 	    	}
 	    	echo "</tbody></table>";
+	    	echo "</div>";
+	    	echo "</div>";
+	    	echo "<div class=\"row\">";
+	    	echo "<div class=\"span6\">";
+	    	echo "<table class=\"table table-striped\"><thead><tr><th>Sid</th><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th><th></th></tr></thead>";
+	    	echo "<tbody>";
+	    	$result = oci_parse($conn, $stat2);
+            oci_execute($result);
+            while (($mrow = oci_fetch_array($result, OCI_ASSOC)))
+	    	{
+	    		echo "<tr>";
+	    		echo "<td>".$mrow['SID']."</td>";
+	    		echo "<td>".$mrow['TUTORNAME']."</td>";
+	    		echo "<td>".$mrow['USERNAME']."</td>";
+	    		echo "<td>".$mrow['SNAME']."</td>";
+	    		echo "<td>$".$mrow['PRICE']."</td>";
+	    		echo "<td>".$mrow['SDATE']."</td>";
+	    		echo "<td>".$mrow['TIMEPERIOD']."min</td>";
+	    		if ($mrow['STATE']==0)
+	    		{
+	    			echo "<td><button class=\"bnt\" type=\"submit\">Accept</button></td>";
+	    		}
+	    		echo "</tr>";
+	    	}
+            echo "</tbody></table>";
+	    	echo "</div>";
+	    	echo "</div>";
 	    	oci_free_statement($result);
         ?>
 		</div>
 	  </div>
+	</div>
+	<div class="tab-pane fade" id="myedu">
+	  <div class="row">
+		<div class="span8">
+		<?php 
+			if($istutor)
+			{
+            require 'connect.php';
+            $stat = "select * from TUTOR_EDU T where T.TUTORNAME='$username'";
+            $result = oci_parse($conn, $stat);
+            oci_execute($result);
+            echo "<div class=\"row\">";
+            echo "<div class=\"span6\">";
+            echo "<table class=\"table table-striped\"><thead><tr><th>ID</th><th>School</th><th>Start_Date</th><th>End_Date</th></tr></thead>";
+	    	echo "<tbody>";
+	    	$id = 1;
+	    	while (($mrow = oci_fetch_array($result, OCI_ASSOC)))
+	    	{
+	    		echo "<tr>";
+	    		echo "<td>".$id++."</td>";
+	    		echo "<td>".$mrow['SCHOOL']."</td>";
+	    		echo "<td>".$mrow['START_DATE']."</td>";
+	    		echo "<td>".$mrow['END_DATE']."</td>";
+	    		echo "</tr>";
+	    	}
+	    	echo "</tbody></table>";
+	    	echo "</div>";
+	    	echo "</div>";
+	    	
+	    	oci_free_statement($result);
+			}
+        ?>
+		</div>
+	  </div>
+	  <!-- ADD NEW EDUCATION RECORD -->
+              <div id="ADDEDUModal" class="modal hide fade">
+            	<div class="modal-header">
+              		<a class="close" data-dismiss="modal" >&times;</a>
+              		<h3>Message</h3>
+            	</div>
+              	<div class="modal-body">
+              		<form action="addedu.php" method="POST">
+						<fieldset>
+		   				<div class="clearfix">
+		      	  			<label><b>School</b></label><input type="text" name="school">
+		   				</div>
+		   				<div class="clearfix">
+		       	  			<label><b>Start Date</b></label><input data-datepicker="datepicker" type="text" name="start_date" id="start_date">
+		   				</div>
+						<div class="clearfix">
+		       	  			<label><b>End Date</b></label><input data-datepicker="datepicker" type="text" name="end_date" id="end_date">
+		   				</div>
+		   				</fieldset>
+		   					<div class="modal-footer">
+              					<a href="#" class="btn" data-dismiss="modal" >Close</a>
+              					<input class="btn btn-primary" type="submit" name="submit" value="Submit">
+            				</div>
+		   			</form>
+            	</div>
+          		</div>
+          		<a data-toggle="modal" href="#ADDEDUModal" class="btn btn-primary btn-large">Add another one</a>	  
+          		<!--END -->
+	</div>
+	<div class="tab-pane fade" id="myexp">
+	  <div class="row">
+		<div class="span8">
+		<?php 
+			if($istutor)
+			{
+            require 'connect.php';
+            $stat = "select * from TUTOR_EXP T where T.TUTORNAME='$username'";
+            $result = oci_parse($conn, $stat);
+            oci_execute($result);
+            echo "<div class=\"row\">";
+            echo "<div class=\"span6\">";
+            echo "<table class=\"table table-striped\"><thead><tr><th>ID</th><th>Company</th><th>Start_Date</th><th>End_Date</th><th>Description</th></tr></thead>";
+	    	echo "<tbody>";
+	    	$id = 1;
+	    	while (($mrow = oci_fetch_array($result, OCI_ASSOC)))
+	    	{
+	    		echo "<tr>";
+	    		echo "<td>".$id++."</td>";
+	    		echo "<td>".$mrow['COMPANY']."</td>";
+	    		echo "<td>".$mrow['STARTDATE']."</td>";
+	    		echo "<td>".$mrow['ENDDATE']."</td>";
+	    		echo "<td>".$mrow['DESCRIPTION']."</td>";
+	    		echo "</tr>";
+	    	}
+	    	echo "</tbody></table>";
+	    	echo "</div>";
+	    	echo "</div>";
+	    	
+	    	oci_free_statement($result);
+			}
+        ?>
+		</div>
+	  </div>
+	  	  <!-- ADD NEW EDUCATION RECORD -->
+              <div id="ADDEXPModal" class="modal hide fade">
+            	<div class="modal-header">
+              		<a class="close" data-dismiss="modal" >&times;</a>
+              		<h3>Message</h3>
+            	</div>
+              	<div class="modal-body">
+              		<form action="addexp.php" method="POST">
+						<fieldset>
+		   				<div class="clearfix">
+		      	  			<label><b>Company</b></label><input type="text" name="company">
+		   				</div>
+		   				<div class="clearfix">
+		       	  			<label><b>Start Date</b></label><input data-datepicker="datepicker" type="text" name="start_date" id="start_date">
+		   				</div>
+						<div class="clearfix">
+		       	  			<label><b>End Date</b></label><input data-datepicker="datepicker" type="text" name="end_date" id="end_date">
+		   				</div>
+		   				<div class="clearfix">
+		   					<div>
+		       	  				<label><b>Description</b></label>
+		       	  			</div>
+		       	  			<div class="controls">
+              					<textarea class="input-xlarge" id="textarea" rows="3" name="description"></textarea>
+            				</div>
+		   				</div>
+		   				</fieldset>
+		   					<div class="modal-footer">
+              					<a href="#" class="btn" data-dismiss="modal" >Close</a>
+              					<input class="btn btn-primary" type="submit" name="submit" value="Submit">
+            				</div>
+		   			</form>
+            	</div>
+          		</div>
+          		<a data-toggle="modal" href="#ADDEXPModal" class="btn btn-primary btn-large">Add another one</a>	  
+          		<!--END -->
 	</div>
 
           </div>  
@@ -355,6 +530,9 @@
     <script src="assets/js/bootstrap-collapse.js"></script>
     <script src="assets/js/bootstrap-carousel.js"></script>
     <script src="assets/js/bootstrap-typeahead.js"></script>
+    <script src="assets/js/bootstrap-datepicker.js"></script>
+    
+    
 
   </body>
 </html>
