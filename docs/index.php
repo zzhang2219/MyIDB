@@ -141,22 +141,44 @@
             <div class="span9">
               <h2>Top Tutors in New York</h2>
 						<?php
-						$s = oci_parse($conn, 'select * from users u, tutor t, tutor_spec ts where u.istutor=1 and u.username=t.tutorname and ts.tutorname=t.tutorname order by t.rate');
+						$s = oci_parse($conn, 'select * from users u, tutor t where u.istutor=1 and u.username=t.tutorname order by t.rate');
 						oci_execute($s);
 						//Define table layout
 						echo "<table class=\"table table-striped\">";
 						echo "<tbody>";
 						while (($row = oci_fetch_array($s, OCI_ASSOC)))
 						{
+							$uname=$row['USERNAME'];
 							echo "<tr>";
-							echo "<td width=160px><img style=\"height:200px;width:140px\" src =".$row['PHOTO']."/></td>";
+							echo "<td width=160px><img style=\"height:200px;width:140px\" src =".$row['PHOTO']."></td>";
 							echo "<td> <table><tr>";
 							echo "<td width=300px><a href=\"tutor.php?name=".$row['USERNAME']."\"><h2>".$row['FIRSTNAME']." ".$row['LASTNAME']."</h2></a>Rating: ".$row['RATE']."</td></tr>";
 							echo "<tr><td>".$row['REGION']." ".$row['ZIP']."</td></tr>";
 							echo "<tr><td>".$row['EMAIL']." ".$row['PHONE']."</td></tr>";
 							echo "<tr><td colspan=2 style=\"width:150px;\">".$row['DESCRIPTION']."</td></tr>"; 
 							echo "</table></td>";
-							echo "<td>".$row['SNAME']."</td></tr>";
+							echo "<td><h3>Main Subject</h3>";
+							$querys = "select * from tutor_spec ts where ts.tutorname = '".$uname."'";
+							$ss = oci_parse($conn, $querys);
+							oci_execute($ss);
+							while (($rows = oci_fetch_array($ss, OCI_ASSOC)))
+							{
+								echo $rows['SNAME']."<br/>";
+							}
+							echo "<br/><h3>Good At </h3><br/>";
+							$queryt = "select * from tutor_tag tt where tt.tutorname = '".$uname."'";
+							$st = oci_parse($conn, $queryt);
+							oci_execute($st);
+							while (($rowt = oci_fetch_array($st, OCI_ASSOC)))
+							{
+								if($rowt['SNAME']=='COMPUTER PROGRAMMING')
+									echo "<button class=\"btn btn-success\" href=\"#\">".$rowt['TAGNAME']."</button> ";
+								else if($rowt['SNAME']=='MATH')
+									echo "<button class=\"btn btn-info\" href=\"#\">".$rowt['TAGNAME']."</button> ";
+								else
+									echo "<button class=\"btn btn-inverse\" href=\"#\">".$rowt['TAGNAME']."</button> ";
+							}
+							echo "</td></tr>";
 						}
 						echo "</tbody></table>";
 						 
@@ -164,9 +186,7 @@
 						oci_close($conn);
 						?>
 						
-						
-						
-					
+							
             </div><!--/span-->
           </div><!--/row-->
         </div><!--/span-->

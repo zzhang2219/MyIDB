@@ -154,7 +154,7 @@ body {
 						while (($row = oci_fetch_array($s, OCI_ASSOC)))
 						{
 							echo "<tr>";
-							echo "<td width=160px><img style=\"height:200px;width:140px\" src =".$row['PHOTO']."/> <br/><br/>";
+							echo "<td width=160px><img style=\"height:200px;width:140px\" src =".$row['PHOTO']."> <br/><br/>";
 							if ($_SESSION["username"]&&$_SESSION["username"]!=$id)
 								echo "<a data-toggle=\"modal\" href=\"#myModal\" class=\"btn btn-primary btn-large\">Make a schedule</a><br/><br/>
 								<a data-toggle=\"modal\" href=\"#msgModal\"  class=\"btn btn-primary btn-large\"> &nbsp Send Message  &nbsp</a>

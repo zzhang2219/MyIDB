@@ -264,7 +264,7 @@
 	     	  	 {
 	     	  	 	echo "\"tutorupdate.php\"";
 	     	  	 } 
-	     	  	 	?> method="POST">
+	     	  	 	?> method="POST" enctype="multipart/form-data">
 				<fieldset>
 		   		<div class="clearfix">
 		       	  <label><b>Firstname</b></label><input type="text" name="firstname" value=<?php echo $firstname ?>>
@@ -298,6 +298,7 @@
                 		echo "</div>";
                 	} 
                 ?>
+              
 	       	    <div class="clearfix">
 	       	    <div class="control-group">
 					<label class="control-label" for="fileInput">File input</label>
@@ -314,7 +315,7 @@
 		</div>
       </div>
     </div> <!-- /container -->
-              </p>
+              
             </div>
 
 	<div class="tab-pane fade" id="myschedule">
