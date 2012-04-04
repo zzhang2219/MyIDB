@@ -6,17 +6,17 @@ $password = $_POST["password"];
 $firstname = $_POST["firstname"];
 $lastname = $_POST["lastname"];
 $phone = $_POST["phone"];
-
+$file =$_POST["fileinput"];
 $update_query = "UPDATE USERS 
 		SET FIRSTNAME='$firstname', LASTNAME='$lastname', PASSWORD='$password', PHONE='$phone'
 		WHERE USERNAME='$username'";
 //echo $update_query;
 
-$result = oci_parse($conn, $update_query);
+//$result = oci_parse($conn, $update_query);
 
-oci_execute($result);
+//oci_execute($result);
 								
-oci_close($conn);
-Header("Location: member.php");
-
+//oci_close($conn);
+//Header("Location: member.php");
+echo $file;
 ?>

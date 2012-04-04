@@ -228,6 +228,16 @@ body {
 						}
 						echo "</table></td>";
 						
+						echo "<tr><td colspan=3><h3>Review</h3><br/>";
+						$query = "select u.lastname,re.comments,re.ctime,re.rate FROM review re,schedule sch,users u where sch.tutorname = '$id' and sch.username=u.username and re.sid=sch.sid";
+						$s = oci_parse($conn, $query);
+						oci_execute($s);
+						echo "<table width=\"100%\"><tr><th width=\"25%\">User</th><th width=\"50%\" >Comments</th><th width=\"10%\">Rating</th><th width=\"15%\">Date</th></tr>";
+						while (($row = oci_fetch_array($s, OCI_ASSOC)))
+						{
+							echo "<tr><td>".$row['LASTNAME']."</TD><TD>".$row['COMMENTS']."</td><TD>".$row['RATE']."</td><TD>".$row['CTIME']."</td></tr>";
+						}
+						echo "</table></td>";
 						echo "</tbody></table>";
 						?>
 						<div id="msgModal" class="modal hide fade">

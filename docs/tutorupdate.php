@@ -9,25 +9,26 @@ $phone = $_POST["phone"];
 $address = $_POST["address"];
 $zip = $_POST["zip"];
 $price = $_POST["price"];
-
+$file = $_POST["pic"];
+echo "tup".$file;
 $update_user = "UPDATE USERS 
 		SET FIRSTNAME='$firstname', LASTNAME='$lastname', PASSWORD='$password', PHONE='$phone'
 		WHERE USERNAME='$username'";
 //echo $update_query;
 
-$result = oci_parse($conn, $update_user);
+//$result = oci_parse($conn, $update_user);
 
-oci_execute($result);
+//oci_execute($result);
 
 $update_tutor = "UPDATE TUTOR 
 		SET ADDRESS='$address', ZIP='$zip', PRICE=$price
 		WHERE TUTORNAME='$username'";
 
-$result = oci_parse($conn, $update_tutor);
+//$result = oci_parse($conn, $update_tutor);
 
-oci_execute($result);
+//oci_execute($result);
 
-oci_close($conn);
-Header("Location: member.php");
+//oci_close($conn);
+//Header("Location: member.php");
 
 ?>
