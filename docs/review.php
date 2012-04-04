@@ -1,25 +1,38 @@
-<?php
-require 'connect.php';
-$sid = $_GET['sid'];
 
-$query_s = "UPDATE SCHEDULE 
-		SET STATE=2
-		WHERE SID='$sid'";
-echo $query;
-$ctime = date("dd-mm-yy");
-$result = oci_parse($conn, $query_s);
-oci_execute($result);
-$ctime = date("dd-mm-yy");
-$rating = $_POST['rating'];
-$comment = $_POST['comment'];
-
-$query_r = "insert into review(sid, rid, rating, comment, ctime)
-	values($sid, re_seq.nextval,'$rating','$comment','$ctime')";
-oci_close($conn);
-?>
 
 <!DOCTYPE html>
 <html lang="en">
+<?php
+//session_start();
+require 'connect.php';
+$sid = $_GET['sid'];
+//$submit = $_POST['submit'];
+
+if ($_POST['submit'])
+{
+	$query_s = "UPDATE SCHEDULE 
+		SET STATE=2
+		WHERE SID=$sid";
+	$ctime = date("dd-mm-yy");
+	$result = oci_parse($conn, $query_s);
+	oci_execute($result);
+	$ctime = date("dd-mm-yy");
+	$rating = $_POST['rating'];
+	$comment = $_POST['comment'];
+
+	$query_r = "insert into review(sid, rid, rating, comment, ctime)
+	values($sid, re_seq.nextval,'$rating','$comment','$ctime')";
+
+	$result = oci_parse($conn, $query_r);
+	oci_execute($result);
+	oci_close($conn);
+	header("Location: member.php");
+}
+//else{
+//	oci_close($conn);
+//	header("Location: index.php");
+//}
+?>
   <head>
     <meta charset="utf-8">
     <title>MyTutor</title>
@@ -81,18 +94,18 @@ oci_close($conn);
 	     <form action="review.php" method="POST">
 		<fieldset>
 		   <div class="clearfix">
-		       <input type="text" placeholder="Username" name="username">
-		   </div>
+		   	<label><b>Rating</b></label><input type="text" name="rating">
+		   </div>	
 		   <div class="clearfix">
- 		       <input type="password" placeholder="Password" name="password">
-		   </div>	   
+		   		<div>
+		       		<label><b>Comment</b></label>
+		       	</div>
+		       	<div class="controls">
+              		<textarea class="input-xlarge" id="textarea" rows="3" name="comment"></textarea>
+            	</div>
+		   </div>   
 		</fieldset>
-		<td>
-		  <button class="btn" type="submit">Sign in</button>
-		</td>
-		<td>
-		  <a class="btn" href="register.php">Register</a>
-		</td>
+		  <input class="btn btn-primary" type="submit" name=submit value="Submit">
 	     </form>
 	  </div>
 	</div>
