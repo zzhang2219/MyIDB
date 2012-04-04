@@ -47,6 +47,13 @@
 	          <li class="active"><a href="list.php">List</a></li>
 	          <?php
 	          require "connect.php";
+	          $tag=$_GET['tag'];
+	          $spec=$_GET['spec'];
+	          $price=$_GET['price'];
+	          $rate=$_GET['rate'];
+	          
+	          
+	          
 	          session_start();
 	          if ($_SESSION['username'])
 	          {
@@ -91,8 +98,7 @@
 		    
 		    while (($row = oci_fetch_array($s, OCI_ASSOC)))
             {
-            	echo "<li><a href=\"search.php?spec=".$row['SNAME']."\"></a></li>";
-            	
+            	echo "<li><a href=\"#\">".$row['SNAME']."</a></li>";
             }
             ?>
           </ul>
@@ -126,7 +132,7 @@
             	oci_execute($s);
             	while (($row = oci_fetch_array($s, OCI_ASSOC)))
             	{
-            		echo "<li><a href=\"search.php?spec=".$row['SNAME']."\">".$row['SNAME']."</a></li>";
+            		echo "<li><a href=\"#\">".$row['SNAME']."</a></li>";
             	}
             }
             echo "</ul>";
@@ -140,8 +146,18 @@
           <div class="row-fluid">
             <div class="span9">
               <h2>Top Tutors in New York</h2>
-						<?php
-						$s = oci_parse($conn, 'select * from users u, tutor t where u.istutor=1 and u.username=t.tutorname order by t.rate');
+				<?php
+						$query="select * from users u, tutor t where u.istutor=1 and u.username=t.tutorname where u.istutor=1 and u.username=t.tutorname '";
+						if($price)
+							$query = $query."and price <= ".$price;
+						if($rate)
+							$query = $query." and rate >=".$rate;
+						if ($tag)
+							$query = $query." and t.tutorname in select tutorname from tutor_tag where tag=".$tag;
+						if ($spec)
+							$query = $query." and t.tutorname in select tutorname from tutor_spec where tag=".$spec;
+						
+						$s = oci_parse($conn, $query);
 						oci_execute($s);
 						//Define table layout
 						echo "<table class=\"table table-striped\">";
@@ -163,7 +179,7 @@
 							oci_execute($ss);
 							while (($rows = oci_fetch_array($ss, OCI_ASSOC)))
 							{
-								echo $rows['SNAME']."<br/>";
+								echo "<a herf=\"search.php?spec=".$rows['SNAME']."\"<br/>";
 							}
 							echo "<br/><h3>Good At </h3><br/>";
 							$queryt = "select * from tutor_tag tt where tt.tutorname = '".$uname."'";
