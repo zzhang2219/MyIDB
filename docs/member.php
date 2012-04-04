@@ -321,9 +321,11 @@
             $stat2 = "select * from schedule S where S.tutorname='$username'";
             $result = oci_parse($conn, $stat1);
             oci_execute($result);
+            echo "<div class =\"container\">";
+            echo "<div class=\"content\">";
             echo "<div class=\"row\">";
             echo "<div class=\"span6\">";
-            echo "<table class=\"table table-striped\"><thead><tr><th>Sid</th><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th><th></th></tr></thead>";
+            echo "<table class=\"table table-bordered table-striped\"><thead><tr><th>Sid</th><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th><th>Status</th></tr></thead>";
 	    	echo "<tbody>";
 	    	while (($mrow = oci_fetch_array($result, OCI_ASSOC)))
 	    	{
@@ -337,16 +339,28 @@
 	    		echo "<td>".$mrow['TIMEPERIOD']."min</td>";
 	    		if ($mrow['STATE']==1)
 	    		{
-	    			echo "<td><button class=\"bnt\" type=\"submit\">Review</button></td>";
+	    			echo "<td><a class=\"btn btn-warning\" href=\"review.php?sid=".$mrow['SID']."\">Review</a></td>";
+	    		}
+	    		else {
+	    			if($mrow['STATE']==0)
+	    			{
+	    				echo "<td><button class=\"btn btn-warning\" disabled>Pending</button></td>";
+	    			}
+	    			else 
+	    			{
+	    				echo "<td><button class=\"btn btn-success\">Finished</button></td>";
+	    			}
 	    		}
 	    		echo "</tr>";
 	    	}
 	    	echo "</tbody></table>";
-	    	echo "</div>";
-	    	echo "</div>";
+	    	echo "</div></div>";
+	    	echo "</div></div>";
+	    	echo "<div class=\"container\">";
+	    	echo "<div calss=\"content\">";
 	    	echo "<div class=\"row\">";
 	    	echo "<div class=\"span6\">";
-	    	echo "<table class=\"table table-striped\"><thead><tr><th>Sid</th><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th><th></th></tr></thead>";
+	    	echo "<table class=\"table table-bordered table-striped\"><thead><tr><th>Sid</th><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th><th>Status</th></tr></thead>";
 	    	echo "<tbody>";
 	    	$result = oci_parse($conn, $stat2);
             oci_execute($result);
@@ -362,13 +376,22 @@
 	    		echo "<td>".$mrow['TIMEPERIOD']."min</td>";
 	    		if ($mrow['STATE']==0)
 	    		{
-	    			echo "<td><button class=\"bnt\" type=\"submit\">Accept</button></td>";
+	    			echo "<td><a class=\"btn btn-primary\" href=\"accept.php?sid=".$mrow['SID']."\">Accept</a></td>";
+	    		}
+	    		else {
+	    			if ($mrow['STATE']==1)
+	    			{
+	    				echo "<td><button class=\"btn btn-warning\" disabled>Processing</button></td>";
+	    			}
+	    			else{
+	    				echo "<td><button class=\"btn btn-success\">Finished</button></td>";
+	    			}
 	    		}
 	    		echo "</tr>";
 	    	}
             echo "</tbody></table>";
-	    	echo "</div>";
-	    	echo "</div>";
+	    	echo "</div></div>";
+	    	echo "</div></div>";
 	    	oci_free_statement($result);
         ?>
 		</div>
