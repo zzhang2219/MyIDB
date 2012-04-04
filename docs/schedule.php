@@ -11,8 +11,8 @@ echo $date=$_POST['date'];
 
 if ($uname&&$tname)
 {
-	$query = "insert into schedule(sid,username,tutorname,sname,timeperiod,price,sdate)
-	values(sch_seq.nextval,'$uname','$tname','$spec',$tp,$price,to_date('$date','yyyy-mm-dd'))";
+	$query = "insert into schedule(sid,username,tutorname,sname,timeperiod,price,sdate,state)
+	values(sch_seq.nextval,'$uname','$tname','$spec',$tp,$price,to_date('$date','yyyy-mm-dd'),0)";
 	echo $query;
 	$s=oci_parse($conn, $query);
 	oci_execute($s);

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -109,7 +108,7 @@
                 	//echo $query;
                 	$s = oci_parse($conn, $query);
 	    			oci_execute($s); 
-	    			
+
 	    			while(($row = oci_fetch_array($s, OCI_ASSOC)))
 	    			{
 	    				echo "<div class=\"span6\">";
@@ -424,7 +423,7 @@
 	    	echo "</tbody></table>";
 	    	echo "</div>";
 	    	echo "</div>";
-	    	
+
 	    	oci_free_statement($result);
 			}
         ?>
@@ -487,7 +486,7 @@
 	    	echo "</tbody></table>";
 	    	echo "</div>";
 	    	echo "</div>";
-	    	
+
 	    	oci_free_statement($result);
 			}
         ?>
@@ -559,6 +558,3 @@
 
   </body>
 </html>
-
-
-
