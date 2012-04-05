@@ -1,38 +1,36 @@
-
-
-<!DOCTYPE html>
-<html lang="en">
 <?php
 //session_start();
 require 'connect.php';
-$sid = $_GET['sid'];
+$get_sid = $_GET['sid'];
 //$submit = $_POST['submit'];
 
 if ($_POST['submit'])
 {
+	$sid = $get_sid;
 	$query_s = "UPDATE SCHEDULE 
 		SET STATE=2
 		WHERE SID=$sid";
+	echo $query_s;
 	$ctime = date("dd-mm-yy");
 	$result = oci_parse($conn, $query_s);
 	oci_execute($result);
-	$ctime = date("dd-mm-yy");
+	$ctime = date("d-m-y");
 	$rating = $_POST['rating'];
 	$comment = $_POST['comment'];
 
-	$query_r = "insert into review(sid, rid, rating, comment, ctime)
-	values($sid, re_seq.nextval,'$rating','$comment','$ctime')";
-
+	$query_r = "insert into review(sid, rid, rate comments, ctime)
+	values($sid, re_seq.nextval,$rating,'$comment',to_date('$ctime', 'dd-mm-yy'))";
+	echo $query_r;
 	$result = oci_parse($conn, $query_r);
 	oci_execute($result);
 	oci_close($conn);
-	header("Location: member.php");
+	//header("Location: member.php");
 }
-//else{
-//	oci_close($conn);
-//	header("Location: index.php");
-//}
 ?>
+<!DOCTYPE html>
+<html lang="en">
+
+
   <head>
     <meta charset="utf-8">
     <title>MyTutor</title>
@@ -91,7 +89,7 @@ if ($_POST['submit'])
 	<div class="row">
 	  <div class="login-form">
 	     <h2>Review</h2>
-	     <form action="review.php" method="POST">
+	     <form action="review.php?sid=<?php echo $get_sid;?>" method="POST">
 		<fieldset>
 		   <div class="clearfix">
 		   	<label><b>Rating</b></label><input type="text" name="rating">

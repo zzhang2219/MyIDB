@@ -91,7 +91,7 @@
 		    
 		    while (($row = oci_fetch_array($s, OCI_ASSOC)))
             {
-            	echo "<li><a href=\"search.php?spec=".$row['SNAME']."\"></a></li>";
+            	echo "<li><a href=\"#\">".$row['SNAME']."</a></li>";
             	
             }
             ?>
@@ -126,7 +126,7 @@
             	oci_execute($s);
             	while (($row = oci_fetch_array($s, OCI_ASSOC)))
             	{
-            		echo "<li><a href=\"search.php?spec=".$row['SNAME']."\">".$row['SNAME']."</a></li>";
+            		echo "<li><a href=\"#\">".$row['SNAME']."</a></li>";
             	}
             }
             echo "</ul>";

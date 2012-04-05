@@ -59,20 +59,19 @@
 
 	    require "connect.php";
 
-	    $s = oci_parse($conn, 'select * from users');
+	    $s = oci_parse($conn, 'select * from review');
 	    oci_execute($s);
 	    //Define table layout
-	    echo "<table class=\"table table-striped\"><thead><tr><th>Username</th><th>First Name</th><th>Last Name</th><th>Gender</th><th>Email</th><th>Phone</th></tr></thead>";
+	    echo "<table class=\"table table-striped\"><thead><tr><th>sid</th><th>rid</th><th>Rating</th><th>Comment</th><th>Ctime</th></tr></thead>";
 	    echo "<tbody>";
 	    while (($row = oci_fetch_array($s, OCI_ASSOC)))
 	    {
 	    	echo "<tr>";
-	    	echo "<td>".$row['USERNAME']."</td>";
-	    	echo "<td>".$row['FIRSTNAME']."</td>";
-	    	echo "<td>".$row['LASTNAME']."</td>";
-	    	echo "<td>".$row['GENDER']."</td>";
-	    	echo "<td>".$row['EMAIL']."</td>";
-	    	echo "<td>".$row['PHONE']."</td>";
+	    	echo "<td>".$row['SID']."</td>";
+	    	echo "<td>".$row['RID']."</td>";
+	    	echo "<td>".$row['RATE']."</td>";
+	    	echo "<td>".$row['COMMENTS']."</td>";
+	    	echo "<td>".$row['CTIME']."</td>";
 	    	echo "</tr>";
 	
 	    }

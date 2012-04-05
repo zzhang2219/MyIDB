@@ -331,6 +331,7 @@
             echo "<div class=\"content\">";
             echo "<div class=\"row\">";
             echo "<div class=\"span6\">";
+            echo "<h>My Order</h>";
             echo "<table class=\"table table-bordered table-striped\"><thead><tr><th>Sid</th><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th><th>Status</th></tr></thead>";
 	    	echo "<tbody>";
 	    	while (($mrow = oci_fetch_array($result, OCI_ASSOC)))
@@ -352,9 +353,13 @@
 	    			{
 	    				echo "<td><button class=\"btn btn-warning\" disabled>Pending</button></td>";
 	    			}
+	    			else if($mrow['STATE']==2) 
+	    			{
+	    				echo "<td><button class=\"btn btn-success\" disabled>Finished</button></td>";
+	    			}
 	    			else 
 	    			{
-	    				echo "<td><button class=\"btn btn-success\">Finished</button></td>";
+	    				echo "<td><button class=\"btn btn-inverse\" disabled>Cancel</button></td>";
 	    			}
 	    		}
 	    		echo "</tr>";
@@ -366,12 +371,15 @@
 	    	echo "<div calss=\"content\">";
 	    	echo "<div class=\"row\">";
 	    	echo "<div class=\"span6\">";
+	    	echo "<h>My Service</h>";
 	    	echo "<table class=\"table table-bordered table-striped\"><thead><tr><th>Sid</th><th>Tutorname</th><th>Username</th><th>Specialty</th><th>Price</th><th>StartDate</th><th>Length</th><th>Status</th></tr></thead>";
 	    	echo "<tbody>";
 	    	$result = oci_parse($conn, $stat2);
             oci_execute($result);
             while (($mrow = oci_fetch_array($result, OCI_ASSOC)))
 	    	{
+	    		if($mrow['STATE']!=3)
+	    		{
 	    		echo "<tr>";
 	    		echo "<td>".$mrow['SID']."</td>";
 	    		echo "<td>".$mrow['TUTORNAME']."</td>";
@@ -382,18 +390,21 @@
 	    		echo "<td>".$mrow['TIMEPERIOD']."min</td>";
 	    		if ($mrow['STATE']==0)
 	    		{
-	    			echo "<td><a class=\"btn btn-primary\" href=\"accept.php?sid=".$mrow['SID']."\">Accept</a></td>";
+	    			echo "<td><a class=\"btn btn-primary\" href=\"accept.php?sid=".$mrow['SID']."\">Accept</a>";
+	    			echo "<a class=\"btn btn-danger\" href=\"decline.php?sid=".$mrow['SID']."\">Decline</a></td>";
 	    		}
 	    		else {
 	    			if ($mrow['STATE']==1)
 	    			{
 	    				echo "<td><button class=\"btn btn-warning\" disabled>Processing</button></td>";
 	    			}
-	    			else{
-	    				echo "<td><button class=\"btn btn-success\">Finished</button></td>";
+	    			else if($mrow['STATE']==2)
+	    			{
+	    				echo "<td><button class=\"btn btn-success\" disabled>Finished</button></td>";
 	    			}
 	    		}
 	    		echo "</tr>";
+	    		}
 	    	}
             echo "</tbody></table>";
 	    	echo "</div></div>";
